@@ -1,8 +1,41 @@
+import 'dotenv/config';
 import { Request, Response, NextFunction } from 'express';
 import knex from '../database'
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+interface User {
+  id: number
+  username: string
+  password: string
+}
+
+const secret = <string>process.env.SECRET_HASH;
+
+function generateToken(params={}){
+  return jwt.sign(params, secret)
+}
 
 export default {
+  async authenticate(req: Request, res: Response, next: NextFunction){
+    try{
+      const { username, password } = req.body;
+
+      const user = await knex<User>('users').where('username', username).first();
+
+      if (!user)
+        return res.status(401).json({error: 'Username not registered'})
+
+      if( await bcrypt.compare(password, user.password) ){
+        user['password'] = '';
+        const user_id = user.id
+        const authorization = generateToken({username, user_id})
+        return res.json({authorization})
+      } 
+    }catch(error){
+      next(error)
+    }
+  },
   async index(req: Request, res: Response, next: NextFunction){
     try {
       const users = await knex('users');
