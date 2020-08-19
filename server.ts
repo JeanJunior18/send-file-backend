@@ -7,6 +7,7 @@ console.log(path.resolve(__dirname, 'uploads'))
 
 app
   .use(cors())
+  .use(express.json())
   .use(router)
   .use('/uploads',express.static(path.resolve(__dirname, 'uploads')))
   .use((req:Request, res:Response, next:NextFunction)=>{
