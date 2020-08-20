@@ -24,7 +24,8 @@ export default (req: Request, res:Response, next: NextFunction) => {
     if(err)
       return res.status(401).json({error: 'Invalid Token'});
     
-    req.user = decoded
+    req.user = decoded;
 
+    return next();
   })
 }
