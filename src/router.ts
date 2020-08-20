@@ -13,7 +13,8 @@ router
   .post('/login', UserController.authenticate)
   .get('/users', UserController.index)
   .post('/users', UserController.create)
-  .post('/sendpic', auth, upload.single('picture'), FileController.store);
+  .post('/sendpic', auth, upload.single('picture'), FileController.store)
+  .get('/images', auth, FileController.index);
 
 
 

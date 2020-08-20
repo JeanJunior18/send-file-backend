@@ -62,9 +62,8 @@ export default {
         knex('users').insert({
           username,
           password: hash
-        }).then(response => {
-          console.log(response)
-          return res.send('User successfully registered')
+        }).then(() => {
+          return res.json('User successfully registered')
         }).catch(error => {
           new Error(error)
         })
